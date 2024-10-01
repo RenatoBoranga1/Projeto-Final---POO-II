@@ -1,4 +1,4 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,13 +177,23 @@ public class Sistema {
             return;
         }
 
-        LocadoraSantander novaLocacao = new LocadoraSantander(veiculo, cliente, agencia, LocalDateTime.now());
-        alugueis.add(novaLocacao);
+        LocadoraSantander aluguel = new LocadoraSantander(veiculo, cliente, agencia, LocalDate.now());
+        alugueis.add(aluguel);
         veiculo.alugar();
-        System.out.println("Veículo alugado com sucesso!");
+        System.out.println("Veículo alugado com sucesso!\n");
+        System.out.println("Comprovante:");
+        System.out.println("Dados do Cliente: ");
+        System.out.println("Nome: " + aluguel.getCliente().getNome());
+        System.out.println("Documento: " + aluguel.getCliente().getDocumento() + "\n");
+        System.out.println("Dados do Veículo: ");
+        System.out.println("Modelo: " + aluguel.getVeiculo().getModelo());
+        System.out.println("Placa: " + aluguel.getVeiculo().getPlaca());
+        System.out.println("Cor: " + aluguel.getVeiculo().getCor() + "\n");
+        System.out.println("Alugado na Agência: " + aluguel.getAgencia().getNome() + ", na cidade de " + aluguel.getAgencia().getCidade() + "\n");
+        System.out.println("Data do Aluguel: " + aluguel.getAluguelData());
     }
 
-    public void entregarVeiculo(String documentoCliente, String modeloVeiculo, String cidadeAgencia) {
+    public void entregarVeiculo(String documentoCliente, String modeloVeiculo, String nomeAgenciaDevolucao) {
         LocadoraSantander aluguelEncontrado = null;
         for (LocadoraSantander aluguel : alugueis) {
             if (aluguel.getCliente().getDocumento().equals(documentoCliente) &&
@@ -193,8 +203,15 @@ public class Sistema {
                 break;
             }
         }
+
         if (aluguelEncontrado != null) {
-            aluguelEncontrado.entregarVeiculo(LocalDateTime.now(), buscarAgenciaPorCidade(cidadeAgencia));
+            Agencia agenciaDevolucao = buscarAgenciaPorNome(nomeAgenciaDevolucao);
+            if (agenciaDevolucao == null) {
+                System.out.println("Agência para devolução não encontrada.");
+                return;
+            }
+
+            aluguelEncontrado.entregarVeiculo(LocalDate.now(), agenciaDevolucao);
             System.out.println("Veículo entregue com sucesso!\n");
             System.out.println("Comprovante:");
             System.out.println("Dados do Cliente: ");
