@@ -1,3 +1,4 @@
+
 public class Moto extends Veiculo {
     public Moto(String placa, String modelo, String cor) {
         super(modelo, placa, cor);
